@@ -1,0 +1,12 @@
+node_modules/
+.env
+.env.*
+!.env.example
+secrets/
+certs/*.key
+backups/
+logs/
+.DS_Store
+npm-debug.log*
+*.backup
+*.tar.gz

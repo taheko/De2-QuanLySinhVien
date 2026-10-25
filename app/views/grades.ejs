@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Quản lý điểm số - Hệ Thống Quản Lý Sinh Viên</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header>
+        <div class="navbar">
+            <a href="/students" class="brand">
+                <span>🎓 Quản Lý Sinh Viên</span>
+                <span class="brand-badge">Đề 2</span>
+            </a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="/students">Sinh viên</a></li>
+                    <li><a href="/classes">Lớp học</a></li>
+                    <li><a href="/grades" class="active">Điểm số</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Quản Lý Điểm Số</h1>
+                <p class="page-subtitle">Ghi nhận điểm thi, học kỳ và kết quả học tập của sinh viên theo môn học</p>
+            </div>
+        </div>
+
+        <div class="card" style="margin-bottom: 24px;">
+            <div class="card-header">
+                <strong>+ Nhập bản ghi điểm mới</strong>
+            </div>
+            <div style="padding: 20px;">
+                <form method="POST" action="/grades" style="display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end;">
+                    <div style="flex: 2; min-width: 220px;">
+                        <label class="form-label">Sinh viên</label>
+                        <select name="student_id" class="form-control" required>
+                            <option value="">-- Chọn sinh viên --</option>
+                            <% students.forEach(function(s) { %>
+                                <option value="<%= s.id %>"><%= s.student_code %> - <%= s.full_name %></option>
+                            <% }) %>
+                        </select>
+                    </div>
+                    <div style="flex: 2; min-width: 220px;">
+                        <label class="form-label">Môn học</label>
+                        <select name="subject_id" class="form-control" required>
+                            <option value="">-- Chọn môn học --</option>
+                            <% subjects.forEach(function(sub) { %>
+                                <option value="<%= sub.id %>"><%= sub.subject_code %> - <%= sub.subject_name %></option>
+                            <% }) %>
+                        </select>
+                    </div>
+                    <div style="flex: 1; min-width: 120px;">
+                        <label class="form-label">Điểm số (0-10)</label>
+                        <input type="number" name="score" min="0" max="10" step="0.01" class="form-control" placeholder="Ví dụ: 8.5" required>
+                    </div>
+                    <div style="flex: 1; min-width: 130px;">
+                        <label class="form-label">Học kỳ</label>
+                        <input type="text" name="semester" maxlength="30" class="form-control" placeholder="2026-1" required>
+                    </div>
+                    <div>
+                        <button type="submit" class="btn btn-primary" style="height: 42px;">Ghi nhận điểm</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+                <span>Bảng điểm chi tiết sinh viên</span>
+                <span style="font-size: 0.85rem; color: var(--gray-500);">Tổng số: <%= grades.length %> bản ghi</span>
+            </div>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Sinh viên</th>
+                            <th>Môn học</th>
+                            <th style="width: 100px; text-align: center;">Điểm số</th>
+                            <th style="width: 120px;">Học kỳ</th>
+                            <th style="width: 280px; text-align: right;">Cập nhật / Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% grades.forEach(function(g) { %>
+                            <tr>
+                                <td>
+                                    <span class="badge badge-primary"><%= g.student_code %></span>
+                                    <span style="font-weight: 600; margin-left: 6px;"><%= g.full_name %></span>
+                                </td>
+                                <td>
+                                    <span class="badge badge-info"><%= g.subject_code %></span>
+                                    <span style="margin-left: 6px;"><%= g.subject_name %></span>
+                                </td>
+                                <td style="text-align: center;">
+                                    <% if (g.score >= 8.5) { %>
+                                        <span class="badge badge-success" style="font-size: 0.95rem; font-weight: 700;"><%= g.score %> (Giỏi)</span>
+                                    <% } else if (g.score >= 7.0) { %>
+                                        <span class="badge badge-info" style="font-size: 0.95rem; font-weight: 700;"><%= g.score %> (Khá)</span>
+                                    <% } else if (g.score >= 5.0) { %>
+                                        <span class="badge badge-warning" style="font-size: 0.95rem; font-weight: 700;"><%= g.score %> (Trung bình)</span>
+                                    <% } else { %>
+                                        <span class="badge" style="background: #fee2e2; color: #dc2626; font-size: 0.95rem; font-weight: 700;"><%= g.score %> (Yếu)</span>
+                                    <% } %>
+                                </td>
+                                <td><span class="badge"><%= g.semester %></span></td>
+                                <td>
+                                    <div class="actions-cell" style="justify-content: flex-end; gap: 8px;">
+                                        <form method="POST" action="/grades/<%= g.id %>/edit" style="display: flex; gap: 6px;">
+                                            <input type="number" name="score" min="0" max="10" step="0.01" value="<%= g.score %>" class="form-control" style="width: 75px; padding: 4px 6px; font-size: 0.85rem;" required>
+                                            <input type="text" name="semester" value="<%= g.semester %>" class="form-control" style="width: 90px; padding: 4px 6px; font-size: 0.85rem;" maxlength="30" required>
+                                            <button type="submit" class="btn btn-secondary btn-sm">Sửa</button>
+                                        </form>
+                                        <form method="POST" action="/grades/<%= g.id %>/delete"
+                                              onsubmit="return confirm('Bạn có chắc muốn xóa bản ghi điểm này?')">
+                                            <button type="submit" class="btn btn-danger btn-sm">Xóa</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        <% }) %>
+                        <% if (grades.length === 0) { %>
+                            <tr>
+                                <td colspan="5" style="text-align: center; padding: 36px; color: var(--gray-500);">
+                                    Chưa có bản ghi điểm nào được nhập.
+                                </td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>Hệ Thống Quản Lý Sinh Viên – Học phần Triển khai & Quản trị Hệ thống Phần mềm</p>
+    </footer>
+</body>
+</html>

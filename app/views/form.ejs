@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title><%= title %> - Hệ Thống Quản Lý Sinh Viên</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header>
+        <div class="navbar">
+            <a href="/students" class="brand">
+                <span>🎓 Quản Lý Sinh Viên</span>
+                <span class="brand-badge">Đề 2</span>
+            </a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="/students" class="<%= activePage === 'students' ? 'active' : '' %>">Sinh viên</a></li>
+                    <li><a href="/classes" class="<%= activePage === 'classes' ? 'active' : '' %>">Lớp học</a></li>
+                    <li><a href="/grades" class="<%= activePage === 'grades' ? 'active' : '' %>">Điểm số</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container" style="max-width: 760px;">
+        <div class="page-header">
+            <div>
+                <h1 class="page-title"><%= title %></h1>
+                <p class="page-subtitle">Nhập chính xác và đầy đủ các trường thông tin theo quy định</p>
+            </div>
+        </div>
+
+        <% if (error) { %>
+            <div class="alert-error">
+                <strong>Lỗi nhập liệu:</strong> <%= error %>
+            </div>
+        <% } %>
+
+        <div class="card">
+            <div style="padding: 28px;">
+                <form method="POST" action="<%= action %>">
+                    <% fields.forEach(function(field) { %>
+                        <div class="form-group">
+                            <label class="form-label">
+                                <%= field.label %>
+                                <% if (field.required) { %><span style="color: var(--danger);">*</span><% } %>
+                            </label>
+                            <% if (field.type === "select") { %>
+                                <select name="<%= field.name %>" class="form-control" <%= field.required ? "required" : "" %>>
+                                    <option value="">-- Chọn <%= field.label.toLowerCase() %> --</option>
+                                    <% field.options.forEach(function(option) { %>
+                                        <option
+                                            value="<%= option.value %>"
+                                            <%= String(field.value ?? "") === String(option.value) ? "selected" : "" %>>
+                                            <%= option.label %>
+                                        </option>
+                                    <% }) %>
+                                </select>
+                            <% } else { %>
+                                <input
+                                    type="<%= field.type || "text" %>"
+                                    name="<%= field.name %>"
+                                    value="<%= field.value ?? "" %>"
+                                    class="form-control"
+                                    <%= field.min !== undefined ? `min="${field.min}"` : "" %>
+                                    <%= field.max !== undefined ? `max="${field.max}"` : "" %>
+                                    <%= field.step !== undefined ? `step="${field.step}"` : "" %>
+                                    <%= field.required ? "required" : "" %>>
+                            <% } %>
+                        </div>
+                    <% }) %>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Lưu thông tin</button>
+                        <a href="<%= backUrl %>" class="btn btn-secondary">Quay lại danh sách</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>Hệ Thống Quản Lý Sinh Viên – Học phần Triển khai & Quản trị Hệ thống Phần mềm</p>
+    </footer>
+</body>
+</html>

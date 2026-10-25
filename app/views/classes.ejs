@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Quản lý lớp học - Hệ Thống Quản Lý Sinh Viên</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header>
+        <div class="navbar">
+            <a href="/students" class="brand">
+                <span>🎓 Quản Lý Sinh Viên</span>
+                <span class="brand-badge">Đề 2</span>
+            </a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="/students">Sinh viên</a></li>
+                    <li><a href="/classes" class="active">Lớp học</a></li>
+                    <li><a href="/grades">Điểm số</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Quản Lý Lớp Học</h1>
+                <p class="page-subtitle">Quản lý mã lớp, tên lớp và sĩ số sinh viên trực thuộc</p>
+            </div>
+        </div>
+
+        <div class="card" style="margin-bottom: 24px;">
+            <div class="card-header">
+                <strong>+ Thêm lớp học mới</strong>
+            </div>
+            <div style="padding: 20px;">
+                <form method="POST" action="/classes" style="display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end;">
+                    <div style="flex: 1; min-width: 180px;">
+                        <label class="form-label">Mã lớp</label>
+                        <input type="text" name="class_code" class="form-control" placeholder="Ví dụ: ATTT23A" maxlength="30" required>
+                    </div>
+                    <div style="flex: 2; min-width: 250px;">
+                        <label class="form-label">Tên lớp học</label>
+                        <input type="text" name="class_name" class="form-control" placeholder="Ví dụ: An toàn thông tin 23A" maxlength="120" required>
+                    </div>
+                    <div>
+                        <button type="submit" class="btn btn-primary" style="height: 42px;">Thêm lớp</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+                <span>Danh sách lớp học hiện hành</span>
+                <span style="font-size: 0.85rem; color: var(--gray-500);">Tổng số: <%= classes.length %> lớp</span>
+            </div>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th style="width: 20%;">Mã lớp</th>
+                            <th style="width: 40%;">Tên lớp học</th>
+                            <th style="width: 15%; text-align: center;">Sĩ số sinh viên</th>
+                            <th style="width: 25%; text-align: right;">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% classes.forEach(function(c) { %>
+                            <tr>
+                                <td><span class="badge badge-primary"><%= c.class_code %></span></td>
+                                <td style="font-weight: 600; color: var(--gray-900);"><%= c.class_name %></td>
+                                <td style="text-align: center;">
+                                    <span class="badge badge-info"><%= c.student_count %> sinh viên</span>
+                                </td>
+                                <td>
+                                    <div class="actions-cell" style="justify-content: flex-end; gap: 10px;">
+                                        <form method="POST" action="/classes/<%= c.id %>/edit" style="display: flex; gap: 6px;">
+                                            <input type="text" name="class_code" value="<%= c.class_code %>" class="form-control" style="width: 110px; padding: 4px 8px; font-size: 0.85rem;" maxlength="30" required>
+                                            <input type="text" name="class_name" value="<%= c.class_name %>" class="form-control" style="width: 180px; padding: 4px 8px; font-size: 0.85rem;" maxlength="120" required>
+                                            <button type="submit" class="btn btn-secondary btn-sm">Lưu</button>
+                                        </form>
+                                        <form method="POST" action="/classes/<%= c.id %>/delete"
+                                              onsubmit="return confirm('Bạn có chắc muốn xóa lớp [<%= c.class_code %>]? (Nếu còn sinh viên sẽ bị chặn)')">
+                                            <button type="submit" class="btn btn-danger btn-sm">Xóa</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        <% }) %>
+                        <% if (classes.length === 0) { %>
+                            <tr>
+                                <td colspan="4" style="text-align: center; padding: 36px; color: var(--gray-500);">
+                                    Chưa có lớp học nào trong cơ sở dữ liệu.
+                                </td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>Hệ Thống Quản Lý Sinh Viên – Học phần Triển khai & Quản trị Hệ thống Phần mềm</p>
+    </footer>
+</body>
+</html>

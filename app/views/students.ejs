@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Quản lý sinh viên - Hệ Thống Quản Lý Sinh Viên</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header>
+        <div class="navbar">
+            <a href="/students" class="brand">
+                <span>🎓 Quản Lý Sinh Viên</span>
+                <span class="brand-badge">Đề 2</span>
+            </a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="/students" class="active">Sinh viên</a></li>
+                    <li><a href="/classes">Lớp học</a></li>
+                    <li><a href="/grades">Điểm số</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="page-header">
+            <div>
+                <h1 class="page-title">Danh Sách Sinh Viên</h1>
+                <p class="page-subtitle">Quản lý hồ sơ, thông tin liên lạc và lớp học của sinh viên</p>
+            </div>
+            <div>
+                <a href="/students/new" class="btn btn-primary">+ Thêm sinh viên</a>
+            </div>
+        </div>
+
+        <div class="toolbar">
+            <form method="GET" action="/students" class="search-form">
+                <input type="text" name="q" value="<%= q %>" class="search-input" placeholder="Tìm kiếm theo mã sinh viên hoặc họ tên...">
+                <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                <% if (q) { %>
+                    <a href="/students" class="btn btn-secondary">Xóa lọc</a>
+                <% } %>
+            </form>
+            <div style="font-size: 0.9rem; color: var(--gray-500);">
+                Tổng cộng: <strong><%= students.length %></strong> sinh viên
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Mã SV</th>
+                            <th>Họ và Tên</th>
+                            <th>Ngày sinh</th>
+                            <th>Giới tính</th>
+                            <th>Email</th>
+                            <th>Lớp</th>
+                            <th style="text-align: right;">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% students.forEach(function(s) { %>
+                            <tr>
+                                <td><span class="badge badge-primary"><%= s.student_code %></span></td>
+                                <td style="font-weight: 600; color: var(--gray-900);"><%= s.full_name %></td>
+                                <td><%= s.date_of_birth || "-" %></td>
+                                <td>
+                                    <% if (s.gender === "Nam") { %>
+                                        <span class="badge badge-info">Nam</span>
+                                    <% } else if (s.gender === "Nu") { %>
+                                        <span class="badge badge-warning">Nữ</span>
+                                    <% } else { %>
+                                        <span class="badge"><%= s.gender || "-" %></span>
+                                    <% } %>
+                                </td>
+                                <td><%= s.email || "-" %></td>
+                                <td><span class="badge badge-success"><%= s.class_name %></span></td>
+                                <td>
+                                    <div class="actions-cell" style="justify-content: flex-end;">
+                                        <a href="/students/<%= s.id %>/edit" class="btn btn-secondary btn-sm">Sửa</a>
+                                        <form method="POST" action="/students/<%= s.id %>/delete"
+                                              onsubmit="return confirm('Bạn có chắc chắn muốn xóa sinh viên [<%= s.student_code %> - <%= s.full_name %>]?')">
+                                            <button type="submit" class="btn btn-danger btn-sm">Xóa</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        <% }) %>
+                        <% if (students.length === 0) { %>
+                            <tr>
+                                <td colspan="7" style="text-align: center; padding: 36px; color: var(--gray-500);">
+                                    Không tìm thấy sinh viên nào phù hợp với điều kiện tìm kiếm.
+                                </td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>Hệ Thống Quản Lý Sinh Viên – Học phần Triển khai & Quản trị Hệ thống Phần mềm</p>
+    </footer>
+</body>
+</html>
