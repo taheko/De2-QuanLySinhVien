@@ -1,0 +1,44 @@
+{
+  "collected_at": "2026-10-24T23:25:54.192Z",
+  "targets": [
+    {
+      "job": "cadvisor",
+      "instance": "cadvisor:8080",
+      "health": "up",
+      "lastScrape": "2026-10-24T23:25:46.456901385Z"
+    },
+    {
+      "job": "mysql",
+      "instance": "mysql-exporter:9104",
+      "health": "up",
+      "lastScrape": "2026-10-24T23:25:40.939918743Z"
+    },
+    {
+      "job": "nginx",
+      "instance": "nginx-exporter:9113",
+      "health": "up",
+      "lastScrape": "2026-10-24T23:25:49.100865073Z"
+    },
+    {
+      "job": "prometheus",
+      "instance": "prometheus:9090",
+      "health": "up",
+      "lastScrape": "2026-10-24T23:25:43.907582816Z"
+    }
+  ],
+  "metrics": {
+    "mysql_up": "1",
+    "nginx_up": "1",
+    "threads_connected": "4",
+    "nginx_requests_total": "133"
+  },
+  "hardening": {
+    "app_id": "uid=1000(node) gid=1000(node) groups=1000(node)",
+    "backend_network_internal": true,
+    "student_app_grants": [
+      "Grants for student_app@%",
+      "GRANT USAGE ON *.* TO `student_app`@`%`",
+      "GRANT SELECT, INSERT, UPDATE, DELETE ON `student_management`.* TO `student_app`@`%`"
+    ]
+  }
+}

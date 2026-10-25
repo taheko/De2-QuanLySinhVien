@@ -1,0 +1,20 @@
+{
+  "LogQL 1: Xem Access Log Nginx": {
+    "query": "{container=~\".*nginx.*\"}",
+    "status": "success",
+    "count": 5,
+    "sample": "{\"time_local\":\"24/Oct/2026:23:24:26 +0000\",\"remote_addr\":\"172.18.0.1\",\"request_method\":\"GET\",\"request_uri\":\"/not-found-demo\",\"status\":404,\"body_bytes_sent\":945,\"request_time\":0.003,\"http_referrer\":\"\",\"http_user_agent\":\"node\"}"
+  },
+  "LogQL 2: Lọc các request lỗi HTTP (status >= 400)": {
+    "query": "{container=~\".*nginx.*\"} | json | status >= 400",
+    "status": "success",
+    "count": 5,
+    "sample": "{\"time_local\":\"24/Oct/2026:23:24:26 +0000\",\"remote_addr\":\"172.18.0.1\",\"request_method\":\"GET\",\"request_uri\":\"/not-found-demo\",\"status\":404,\"body_bytes_sent\":945,\"request_time\":0.003,\"http_referrer\":\"\",\"http_user_agent\":\"node\"}"
+  },
+  "LogQL 3: Lọc sự kiện nghiệp vụ ứng dụng (app events)": {
+    "query": "{container=~\".*app.*\"} | json | event != \"\"",
+    "status": "success",
+    "count": 5,
+    "sample": "{\"event\":\"student_deleted\",\"student_id\":9}"
+  }
+}
