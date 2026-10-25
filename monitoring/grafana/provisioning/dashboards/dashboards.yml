@@ -1,0 +1,12 @@
+apiVersion: 1
+
+providers:
+  - name: 'De2_QuanLySinhVien'
+    orgId: 1
+    folder: 'Đề 2 - Quản Lý Sinh Viên'
+    type: file
+    disableDeletion: false
+    updateIntervalSeconds: 15
+    allowUiUpdates: true
+    options:
+      path: /etc/grafana/provisioning/dashboards/json
